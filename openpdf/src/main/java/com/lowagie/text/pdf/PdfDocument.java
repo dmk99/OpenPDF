@@ -2534,10 +2534,12 @@ public class PdfDocument extends Document {
      */
     void addPTable(PdfPTable ptable) throws DocumentException {
         ColumnText ct = new ColumnText(writer.getDirectContent());
+        Rectangle previousPageSize = pageSize;
         // if the table prefers to be on a single page, and it wouldn't
         //fit on the current page, start a new page.
         if (ptable.getKeepTogether() && !fitsPage(ptable, 0f) && currentHeight > 0)  {
             newPage();
+            setPageSize(previousPageSize);
         }
         // add dummy paragraph if we aren't at the top of a page, so that
         // spacingBefore will be taken into account by ColumnText
@@ -2567,6 +2569,7 @@ public class PdfDocument extends Document {
                 break;
             }
             newPage();
+            setPageSize(previousPageSize);
         }
         ptable.setHeadersInEvent(he);
     }
